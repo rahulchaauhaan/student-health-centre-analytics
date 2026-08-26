@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+.streamlit/
+.matplotlib-cache/
+.venv/
+venv/
+data/raw/*.csv
+data/processed/*.csv
+database/*.db
+assets/charts/*.png
+reports/*.md
+reports/*.csv
