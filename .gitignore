@@ -11,3 +11,5 @@ database/*.db
 assets/charts/*.png
 reports/*.md
 reports/*.csv
+PROJECT_STORY_AND_EXPLANATION.md
+docs/project_story.md
