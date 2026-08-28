@@ -45,7 +45,7 @@ def navigate_to(page_name: str) -> None:
 
 
 # -------------------------------------------------------------
-# AMGEN CORPORATE DESIGN SYSTEM & CSS
+# ENTERPRISE HEALTHCARE DESIGN SYSTEM & CSS
 # -------------------------------------------------------------
 st.markdown(
     """
@@ -59,7 +59,7 @@ st.markdown(
     }
 
     /* ---------------- TOP NAVBAR STYLING ---------------- */
-    .amgen-nav-wrapper {
+    .portal-nav-wrapper {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
         border-radius: 10px;
@@ -67,7 +67,7 @@ st.markdown(
         margin-bottom: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
-    .amgen-logo {
+    .portal-logo {
         font-size: 1.65rem;
         font-weight: 900;
         letter-spacing: -0.5px;
@@ -77,7 +77,7 @@ st.markdown(
         gap: 0.4rem;
         line-height: 2.5rem;
     }
-    .amgen-logo span {
+    .portal-logo span {
         color: #00A3E0 !important;
     }
 
@@ -234,7 +234,7 @@ st.markdown(
     }
 
     /* ---------------- HERO BANNER ---------------- */
-    .amgen-hero {
+    .portal-hero {
         background: linear-gradient(135deg, #0050C8 0%, #003087 55%, #001F5C 100%);
         border-radius: 12px;
         padding: 2.2rem 2.5rem;
@@ -281,7 +281,7 @@ st.markdown(
     }
 
     /* ---------------- KPI CARD ---------------- */
-    .amgen-kpi-card {
+    .portal-kpi-card {
         background: #FFFFFF !important;
         border: 1px solid #E2E8F0;
         border-top: 4px solid #0050C8 !important;
@@ -291,7 +291,7 @@ st.markdown(
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         transition: transform 0.2s, box-shadow 0.2s, border-top-color 0.2s;
     }
-    .amgen-kpi-card:hover {
+    .portal-kpi-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 22px rgba(0, 80, 200, 0.12);
         border-top-color: #00A3E0 !important;
@@ -318,7 +318,7 @@ st.markdown(
     }
 
     /* ---------------- SECTION HEADINGS ---------------- */
-    .amgen-section-heading {
+    .portal-section-heading {
         font-size: 1.35rem;
         font-weight: 800;
         color: #002B66 !important;
@@ -380,7 +380,7 @@ def render_top_navbar(current_page: str) -> None:
     col_logo, b1, b2, b3, b4, b5 = st.columns([2.4, 1.2, 1.2, 1.2, 1.2, 1.6])
     with col_logo:
         st.markdown(
-            '<div class="amgen-logo">NIT CALICUT <span>HEALTH</span></div>',
+            '<div class="portal-logo">NIT CALICUT <span>HEALTH</span></div>',
             unsafe_allow_html=True,
         )
     with b1:
@@ -408,7 +408,7 @@ def render_top_navbar(current_page: str) -> None:
 def render_hero_banner(tag: str, title: str, subtitle: str) -> None:
     st.markdown(
         f"""
-        <div class="amgen-hero">
+        <div class="portal-hero">
             <div class="hero-tag">{tag}</div>
             <div class="hero-title">{title}</div>
             <div class="hero-sub">{subtitle}</div>
@@ -421,12 +421,12 @@ def render_hero_banner(tag: str, title: str, subtitle: str) -> None:
     )
 
 
-def amgen_kpi_row(items: list[tuple[str, str, str]]) -> None:
+def kpi_metric_row(items: list[tuple[str, str, str]]) -> None:
     cols = st.columns(len(items))
     for col, (label, val, sub) in zip(cols, items):
         col.markdown(
             f"""
-            <div class="amgen-kpi-card">
+            <div class="portal-kpi-card">
                 <div class="kpi-label">{label}</div>
                 <div class="kpi-value">{val}</div>
                 <div class="kpi-sub">{sub}</div>
@@ -449,7 +449,7 @@ def overview_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame, 
     capacity = data["capacity"]
     kpi = calculate_kpis(filtered_visits, data["students"], data["services"], data["access"], capacity)
 
-    amgen_kpi_row(
+    kpi_metric_row(
         [
             ("Total Encounters", f"{kpi['Total Visits']:,}", "24-Month Volume"),
             ("Campus Population", f"{kpi['Unique Students Served']:,}", "Active Individuals"),
@@ -460,7 +460,7 @@ def overview_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame, 
         ]
     )
 
-    st.markdown('<div class="amgen-section-heading">Longitudinal Volume & Operational Wait-Time Trends</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Longitudinal Volume & Operational Wait-Time Trends</div>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     monthly = filtered_visits.groupby("year_month").size().reset_index(name="visits")
     wait = filtered_visits.groupby("year_month")["wait_time_minutes"].mean().reset_index(name="avg_wait_time")
@@ -469,7 +469,7 @@ def overview_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame, 
     c2.subheader("Average Waiting Time (Minutes)")
     c2.line_chart(wait, x="year_month", y="avg_wait_time", color="#00A3E0")
 
-    st.markdown('<div class="amgen-section-heading">Demographics & Service Utilization Demand</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Demographics & Service Utilization Demand</div>', unsafe_allow_html=True)
     c3, c4 = st.columns(2)
 
     # Population group breakdown
@@ -485,7 +485,7 @@ def overview_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame, 
     c4.subheader("Top Clinical Service Demand")
     c4.bar_chart(service.head(8), x="service_category", y="visits", color="#00A3E0")
 
-    st.markdown('<div class="amgen-section-heading">NIT Calicut 12-Hostel Geographic Distribution</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">NIT Calicut 12-Hostel Geographic Distribution</div>', unsafe_allow_html=True)
     student_mask = enriched["population_group"].eq("Student") if "population_group" in enriched.columns else pd.Series(True, index=enriched.index)
     student_visits = enriched.loc[student_mask]
     hostel_data = (
@@ -529,7 +529,7 @@ def population_demographics_page(data: dict[str, pd.DataFrame], enriched: pd.Dat
     summary["referral_rate_pct"] = ((summary["referrals"] / summary["total_visits"]) * 100).round(1)
     summary["follow_up_rate_pct"] = ((summary["follow_ups"] / summary["total_visits"]) * 100).round(1)
 
-    st.markdown('<div class="amgen-section-heading">Population Benchmark Scorecard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Population Benchmark Scorecard</div>', unsafe_allow_html=True)
     st.dataframe(summary, use_container_width=True)
 
     c1, c2, c3 = st.columns(3)
@@ -542,11 +542,11 @@ def population_demographics_page(data: dict[str, pd.DataFrame], enriched: pd.Dat
     c3.subheader("Referral Rate (%)")
     c3.bar_chart(summary, x=pop_col, y="referral_rate_pct", color="#002B66")
 
-    st.markdown('<div class="amgen-section-heading">Clinical Symptom Prevalence Matrix by Population</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Clinical Symptom Prevalence Matrix by Population</div>', unsafe_allow_html=True)
     symp_pivot = enriched.groupby([pop_col, "symptom_category"]).size().unstack(fill_value=0)
     st.dataframe(symp_pivot, use_container_width=True)
 
-    st.markdown('<div class="amgen-section-heading">Student Sub-Cohort Analysis</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Student Sub-Cohort Analysis</div>', unsafe_allow_html=True)
     student_enriched = enriched.loc[enriched["population_group"].eq("Student")] if "population_group" in enriched.columns else enriched
     segment_summary = (
         student_enriched.groupby("student_segment")
@@ -582,7 +582,7 @@ def access_capacity_page(data: dict[str, pd.DataFrame], filtered_visits: pd.Data
         how="left",
     )
 
-    amgen_kpi_row(
+    kpi_metric_row(
         [
             ("Delayed Access Rate", f"{(access['access_status'].eq('Delayed').mean() * 100):.1f}%", "Scheduling Queue"),
             ("Restricted Access Rate", f"{(access['access_status'].eq('Restricted').mean() * 100):.1f}%", "Capacity Bound"),
@@ -601,11 +601,11 @@ def access_capacity_page(data: dict[str, pd.DataFrame], filtered_visits: pd.Data
     c2.subheader("Identified Access Barriers by Service")
     c2.dataframe(barriers.sort_values("count", ascending=False), use_container_width=True)
 
-    st.markdown('<div class="amgen-section-heading">Average Capacity Utilization by Service (% of Capacity)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Average Capacity Utilization by Service (% of Capacity)</div>', unsafe_allow_html=True)
     util = capacity.groupby("service_category")["capacity_utilization_pct"].mean().sort_values(ascending=False).reset_index()
     st.bar_chart(util, x="service_category", y="capacity_utilization_pct", color="#00A3E0")
 
-    st.markdown('<div class="amgen-section-heading">Operational Coupling: Capacity Pressure vs Waiting Time</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Operational Coupling: Capacity Pressure vs Waiting Time</div>', unsafe_allow_html=True)
     st.scatter_chart(joined, x="capacity_utilization_pct", y="wait_time_minutes", color="service_category")
 
 
@@ -624,7 +624,7 @@ def operations_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame
     monthly = monthly_kpis(filtered_visits, capacity)
     actions = action_required_table(capacity, services)
 
-    amgen_kpi_row(
+    kpi_metric_row(
         [
             ("Avg Wait Time", f"{filtered_visits['wait_time_minutes'].mean():.1f} min", "Mean Triage Wait"),
             ("Median Wait Time", f"{filtered_visits['wait_time_minutes'].median():.1f} min", "50th Percentile"),
@@ -646,7 +646,7 @@ def operations_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame
         c2.subheader("Clinical Outcomes Distribution")
         c2.bar_chart(out, x="outcome", y="visits", color="#00A3E0")
 
-    st.markdown('<div class="amgen-section-heading">Service Performance Standards: Target vs Actual</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Service Performance Standards: Target vs Actual</div>', unsafe_allow_html=True)
     target_actual = capacity.groupby("service_category").agg(
         actual_utilization=("capacity_utilization_pct", "mean"),
         target_wait_time=("target_wait_time", "mean"),
@@ -655,7 +655,7 @@ def operations_page(data: dict[str, pd.DataFrame], filtered_visits: pd.DataFrame
     target_actual = target_actual.merge(actual_wait, on="service_category", how="left")
     st.dataframe(target_actual.round(1), use_container_width=True)
 
-    st.markdown('<div class="amgen-section-heading">Action Required Priority Matrix (Management Action Items)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="portal-section-heading">Action Required Priority Matrix (Management Action Items)</div>', unsafe_allow_html=True)
     st.dataframe(actions, use_container_width=True)
 
 
@@ -692,8 +692,8 @@ def patient_history_page(data: dict[str, pd.DataFrame]) -> None:
         person = students.loc[students["student_id"].eq(selected)].iloc[0]
         history = visits.loc[visits["student_id"].eq(selected)].sort_values("visit_date", ascending=False)
 
-        st.markdown('<div class="amgen-section-heading">Patient Demographic Profile Card</div>', unsafe_allow_html=True)
-        amgen_kpi_row(
+        st.markdown('<div class="portal-section-heading">Patient Demographic Profile Card</div>', unsafe_allow_html=True)
+        kpi_metric_row(
             [
                 ("Patient ID", str(person["student_id"]), "Synthetic ID"),
                 ("Population Group", str(person.get("population_group", "Student")), "Campus Role"),
@@ -703,11 +703,11 @@ def patient_history_page(data: dict[str, pd.DataFrame]) -> None:
             ]
         )
 
-        st.markdown('<div class="amgen-section-heading">Longitudinal Visit Summary</div>', unsafe_allow_html=True)
+        st.markdown('<div class="portal-section-heading">Longitudinal Visit Summary</div>', unsafe_allow_html=True)
         if history.empty:
             st.info("No recorded health visits found for this synthetic record.")
         else:
-            amgen_kpi_row(
+            kpi_metric_row(
                 [
                     ("Total Encounters", f"{len(history):,}", "Recorded Visits"),
                     ("Last Health Visit", str(history["visit_date"].max()), "Recent Record"),
@@ -727,7 +727,7 @@ def patient_history_page(data: dict[str, pd.DataFrame]) -> None:
             c2_sub.subheader("Services Utilized")
             c2_sub.bar_chart(by_service, x="service_category", y="visits", color="#00A3E0")
 
-            st.markdown('<div class="amgen-section-heading">Complete Chronological Encounters Table</div>', unsafe_allow_html=True)
+            st.markdown('<div class="portal-section-heading">Complete Chronological Encounters Table</div>', unsafe_allow_html=True)
             st.dataframe(
                 history[
                     [
@@ -747,7 +747,7 @@ def patient_history_page(data: dict[str, pd.DataFrame]) -> None:
             )
 
     with tab_reports:
-        st.markdown('<div class="amgen-section-heading">Executive Monthly Reports & SQL Data Outputs</div>', unsafe_allow_html=True)
+        st.markdown('<div class="portal-section-heading">Executive Monthly Reports & SQL Data Outputs</div>', unsafe_allow_html=True)
         latest_report = config.REPORTS_DIR / "monthly_management_report_latest.md"
         if latest_report.exists():
             report_text = latest_report.read_text()
