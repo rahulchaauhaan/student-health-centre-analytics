@@ -179,3 +179,52 @@ JOIN visits v ON c.year_month = v.year_month AND c.service_category = v.service_
 GROUP BY c.year_month, c.service_category, c.capacity_utilization_pct, s.target_wait_time
 HAVING c.capacity_utilization_pct > 100 OR AVG(v.wait_time_minutes) > s.target_wait_time * 1.5
 ORDER BY c.year_month, c.capacity_utilization_pct DESC;
+
+-- name: 16_population_group_utilization
+SELECT
+    st.population_group,
+    COUNT(v.visit_id) AS total_visits,
+    COUNT(DISTINCT v.student_id) AS unique_individuals,
+    ROUND(AVG(v.wait_time_minutes), 2) AS avg_wait_time,
+    ROUND(AVG(v.satisfaction_score), 2) AS avg_satisfaction,
+    ROUND(AVG(CASE WHEN v.referral_required = 1 THEN 1.0 ELSE 0 END) * 100, 2) AS referral_rate_pct
+FROM students st
+LEFT JOIN visits v ON st.student_id = v.student_id
+GROUP BY st.population_group
+ORDER BY total_visits DESC;
+
+-- name: 17_nitc_hostel_distribution
+SELECT
+    st.hostel,
+    COUNT(v.visit_id) AS total_visits,
+    COUNT(DISTINCT v.student_id) AS individuals_served,
+    ROUND(AVG(v.wait_time_minutes), 2) AS avg_wait_time,
+    ROUND(AVG(v.satisfaction_score), 2) AS avg_satisfaction
+FROM students st
+JOIN visits v ON st.student_id = v.student_id
+WHERE st.population_group = 'Student'
+GROUP BY st.hostel
+ORDER BY total_visits DESC;
+
+-- name: 18_symptom_profile_by_group
+SELECT
+    st.population_group,
+    v.symptom_category,
+    COUNT(v.visit_id) AS visit_count,
+    ROUND(100.0 * COUNT(v.visit_id) / SUM(COUNT(v.visit_id)) OVER (PARTITION BY st.population_group), 2) AS group_share_pct
+FROM students st
+JOIN visits v ON st.student_id = v.student_id
+GROUP BY st.population_group, v.symptom_category
+ORDER BY st.population_group, visit_count DESC;
+
+-- name: 19_monthly_visits_by_population_group
+SELECT
+    v.year_month,
+    st.population_group,
+    COUNT(v.visit_id) AS total_visits,
+    ROUND(AVG(v.wait_time_minutes), 2) AS avg_wait_time
+FROM visits v
+JOIN students st ON v.student_id = st.student_id
+GROUP BY v.year_month, st.population_group
+ORDER BY v.year_month, total_visits DESC;
+

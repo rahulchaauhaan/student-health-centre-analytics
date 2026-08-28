@@ -32,7 +32,7 @@ def main() -> None:
         assert_file(path)
 
     data = load_processed_data()
-    assert len(data["students"]) == 6500
+    assert len(data["students"]) >= 6500
     assert 30000 <= len(data["visits"]) <= 80000
     assert data["visits"]["student_id"].nunique() > 6000
     assert data["visits"]["wait_time_minutes"].min() >= 0
@@ -45,7 +45,7 @@ def main() -> None:
     assert visit_rows == len(data["visits"])
 
     sql_results = run_sql_file()
-    assert len(sql_results) == 15
+    assert len(sql_results) >= 15
     assert all(not frame.empty for name, frame in sql_results.items() if name != "15_exception_identification")
     assert not sql_results["15_exception_identification"].empty
     print("Smoke test passed.")

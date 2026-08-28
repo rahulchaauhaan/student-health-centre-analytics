@@ -35,7 +35,8 @@ def generate_students(rng: np.random.Generator, n_students: int = config.STUDENT
         options = program_map.get(dept, ["B.Tech", "M.Tech"])
         programs.append(rng.choice(options, p=np.ones(len(options)) / len(options)))
 
-    hostels = _choice(rng, config.HOSTELS, [0.16, 0.15, 0.14, 0.13, 0.12, 0.30], n_students)
+    hostel_weights = np.ones(len(config.HOSTELS)) / len(config.HOSTELS)
+    hostels = _choice(rng, config.HOSTELS, hostel_weights.tolist(), n_students)
     years = rng.choice([1, 2, 3, 4], p=[0.29, 0.25, 0.24, 0.22], size=n_students)
     sports_flag = rng.random(n_students) < 0.12
     segments = []
@@ -51,7 +52,7 @@ def generate_students(rng: np.random.Generator, n_students: int = config.STUDENT
         else:
             segments.append("Hostel Resident")
 
-    return pd.DataFrame(
+    student_df = pd.DataFrame(
         {
             "student_id": student_ids,
             "department": departments,
@@ -59,8 +60,43 @@ def generate_students(rng: np.random.Generator, n_students: int = config.STUDENT
             "year_of_study": years,
             "hostel": hostels,
             "student_segment": segments,
+            "population_group": "Student",
         }
     )
+
+    # Faculty population records (NIT Calicut)
+    n_fac = getattr(config, "FACULTY_COUNT", 250)
+    fac_ids = [f"FAC{i:04d}" for i in range(1, n_fac + 1)]
+    fac_depts = _choice(rng, config.DEPARTMENTS, [0.15, 0.15, 0.15, 0.15, 0.10, 0.10, 0.10, 0.10], n_fac)
+    fac_df = pd.DataFrame(
+        {
+            "student_id": fac_ids,
+            "department": fac_depts,
+            "program": "Faculty",
+            "year_of_study": 0,
+            "hostel": "Faculty Quarters",
+            "student_segment": "Hostel Resident",
+            "population_group": "Faculty",
+        }
+    )
+
+    # General Staff population records (NIT Calicut)
+    n_staff = getattr(config, "GENERAL_STAFF_COUNT", 200)
+    staff_ids = [f"STF{i:04d}" for i in range(1, n_staff + 1)]
+    staff_depts = _choice(rng, ["Administration", "Campus Maintenance", "Health Centre", "Library", "Security"], [0.30, 0.25, 0.15, 0.15, 0.15], n_staff)
+    staff_df = pd.DataFrame(
+        {
+            "student_id": staff_ids,
+            "department": staff_depts,
+            "program": "Staff",
+            "year_of_study": 0,
+            "hostel": "Staff Quarters",
+            "student_segment": "Hostel Resident",
+            "population_group": "General Staff",
+        }
+    )
+
+    return pd.concat([student_df, fac_df, staff_df], ignore_index=True)
 
 
 def generate_staff() -> pd.DataFrame:
@@ -102,10 +138,11 @@ def _sample_visit_dates(rng: np.random.Generator, visit_count: int) -> pd.Series
 
 def _student_visit_probabilities(students: pd.DataFrame) -> np.ndarray:
     weights = np.ones(len(students))
-    weights += students["hostel"].ne("Day Scholar").astype(float).to_numpy() * 0.22
     weights += students["student_segment"].eq("First Year").astype(float).to_numpy() * 0.18
     weights += students["student_segment"].eq("Sports Participant").astype(float).to_numpy() * 0.30
     weights += students["department"].isin(["Computer Science", "Mechanical", "Electronics"]).astype(float).to_numpy() * 0.10
+    weights += students["population_group"].eq("Faculty").astype(float).to_numpy() * 0.15
+    weights += students["population_group"].eq("General Staff").astype(float).to_numpy() * 0.10
     return weights / weights.sum()
 
 

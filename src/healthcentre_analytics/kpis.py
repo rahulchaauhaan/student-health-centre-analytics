@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def add_student_fields(visits: pd.DataFrame, students: pd.DataFrame) -> pd.DataFrame:
-    cols = ["student_id", "department", "program", "year_of_study", "hostel", "student_segment"]
+    cols = [c for c in ["student_id", "department", "program", "year_of_study", "hostel", "student_segment", "population_group"] if c in students.columns]
     return visits.merge(students[cols], on="student_id", how="left")
 
 

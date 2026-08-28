@@ -1,99 +1,77 @@
-# Student Health Centre Access & Service Performance Analytics
+# NIT Calicut Health Centre Performance & Operational Access Analytics
 
 **An Academic Analytics Project Using Synthetic College Health-Centre Data**
 
-All data used in this project is synthetic and created for academic purposes. No real student health records are used.
+All data used in this project is 100% synthetic and created for academic demonstration purposes. No real student health records or personal identifiable information are used.
 
 ## Project Overview
 
-This GitHub-ready B.Tech course project simulates a digital analytics solution for a fictional college health centre serving approximately 6,000-7,000 students. It demonstrates how structured data, SQL, Python, dashboards, data-quality validation, and automated reporting can improve historical retrieval and operational analytics.
+This GitHub-ready B.Tech academic analytics project simulates an operational health-centre analytics solution tailored for the **National Institute of Technology Calicut (NIT Calicut)** campus, serving approximately 6,500 students, 250 faculty, and 200 general staff members. It demonstrates how structured relational schemas, SQL, Python, interactive dashboards, data-quality validation, and automated reporting can transform operational visibility and service access.
 
-The project does not build a diagnosis system, prescription tool, clinical decision engine, authentication system, or real medical-record application.
+The project is an analytics and reporting demonstration, not a diagnosis tool, prescription system, electronic medical records (EMR) software, or authentication platform.
 
 ## Why This Project Was Created
 
-The scenario is inspired by a common operational problem: manual health cards and historical records can make it slow to retrieve past visit activity and analyze service workload. This project models that problem with synthetic data and shows a responsible analytics workflow.
+The scenario is inspired by a common institutional health centre problem: manual health cards and historical record registers make it slow to retrieve past visit activity, track wait times, and analyze operational capacity. This project addresses these challenges using a complete synthetic end-to-end data pipeline.
 
 ## Architecture
 
-1. Synthetic data generation creates students, visits, services, staff, and access records.
-2. Data-quality issues are intentionally inserted into visit data.
-3. Cleaning and validation applies explicit business rules.
-4. Cleaned data is loaded into SQLite.
-5. SQL and Python calculate KPIs, trends, exceptions, and recurring reports.
-6. Streamlit presents four dashboard pages, including a synthetic student history explorer.
+1. **Synthetic Data Generation**: Creates students, faculty, staff, services, staffing capacity, and access matrices across 12 NIT Calicut hostels.
+2. **Intentional Data Quality Injection**: Injects realistic dirty data (duplicate visit IDs, negative wait times, out-of-range dates, missing IDs).
+3. **Cleaning & Validation**: Applies 9 automated business validation rules to produce clean datasets and audit issue logs.
+4. **SQLite Database Layer**: Automatically loads clean relational tables into SQLite.
+5. **SQL & Analytical KPIs**: 19 named SQL queries calculate trends, hostel distributions, population cross-comparisons, and capacity exceptions.
+6. **Streamlit Analytics Dashboard**: 5 rich interactive pages featuring dynamic filtering, KPI scorecards, and single-patient lookup.
 
-## Data Model
+## Data Model & Population Groups
 
-- `students`: synthetic student profile attributes such as department, program, year, hostel, and segment.
-- `visits`: high-level health-centre service interactions, wait times, outcomes, follow-ups, referrals, and satisfaction.
-- `staff`: fictional staff/service-area capacity context.
-- `services`: service category, capacity, and wait-time targets.
-- `access`: service-category access status and barriers by synthetic student segment.
-- `capacity_utilization`: service-month utilization and capacity exception flags.
+- **Population Groups**:
+  - `Student` (6,500 students across 12 NIT Calicut hostels: PG1, PG2, Hostel A, Hostel B, Hostel C, Hostel D, Hostel E, Hostel F, Hostel G, MBH 1, MBH, MLH)
+  - `Faculty` (250 teaching faculty across campus departments)
+  - `General Staff` (200 administrative and campus maintenance staff)
+- `visits`: High-level service interactions, wait times, durations, outcomes, follow-ups, referrals, and satisfaction scores.
+- `staff`: Staff roles and shift capacities.
+- `services`: 10 core service categories, target wait times, and monthly capacities.
+- `access`: Service accessibility status and barriers by student segment.
+- `capacity_utilization`: Monthly capacity utilization percentages and exception flags.
 
-## Dataset Size
+## Dataset Summary
 
-- Synthetic students: 6,500
-- Dirty synthetic visit rows: 52,080
-- Cleaned synthetic visits: 51,515
-- Time period: 24 months from 2024-01 through 2025-12
+- Total Synthetic Population: 6,950 individuals (6,500 students + 250 faculty + 200 staff)
+- Dirty Synthetic Visits: 52,080 rows
+- Cleaned Synthetic Visits: 51,512 rows
+- Time Period: 24 months (January 2024 – December 2025)
 
 ## KPI Layer
 
 | KPI | Formula |
 |---|---|
 | Total Visits | Count of cleaned visit records |
-| Unique Students Served | Distinct `student_id` in visits |
-| Repeat Visit Rate | Students with more than one visit / unique students served |
+| Unique Individuals Served | Distinct `student_id` in visits |
+| Repeat Visit Rate | Individuals with >1 visit / unique individuals served |
 | Average Wait Time | Mean `wait_time_minutes` |
 | Median Wait Time | Median `wait_time_minutes` |
 | Average Consultation Duration | Mean `consultation_duration` |
-| Service Utilization | Total visits / total service monthly capacity / number of months |
-| Capacity Utilization | Service-month visits / service monthly capacity |
+| Capacity Utilization | Monthly service visits / service monthly capacity |
 | Referral Rate | Visits requiring referral / total visits |
 | Follow-up Rate | Visits requiring follow-up / total visits |
-| Average Satisfaction | Mean satisfaction score |
-| Access Restriction Rate | Restricted access combinations / all access combinations |
-| Delayed Access Rate | Delayed access combinations / all access combinations |
-| Monthly Growth | Latest month visits vs previous month visits |
-| Exception Count | Service-month capacity utilization above 100% |
+| Average Satisfaction | Mean satisfaction score (1–5) |
+| Exception Count | Service-months exceeding 100% capacity |
 
-## Main KPIs
+## Interactive Streamlit Dashboard
 
-- Total Visits: 51,515
-- Unique Students Served: 6,497
-- Repeat Visit Rate: 99.63%
-- Average Wait Time: 28.84 minutes
-- Capacity Utilization: 89.05%
-- Referral Rate: 7.27%
-- Follow-up Rate: 19.63%
-- Average Satisfaction: 4.41 / 5
-- Exception Count: 77
-
-## Findings
-
-- 2025-03 had the highest activity with 2,499 visits.
-- General Consultation was the highest-demand service with 15,633 visits.
-- Respiratory reached the highest monthly capacity pressure at 203.8% in 2025-01.
-- First Year had the most delayed or restricted access combinations in the synthetic access matrix.
-- Utilization and wait time correlation was 0.61, indicating measurable operational coupling.
-- Day Scholar generated the highest visit volume among hostel/day-scholar groups.
-
-## Dashboard
-
-Run:
+Run locally:
 
 ```bash
 streamlit run dashboard/app.py
 ```
 
-Pages:
-
-- Health Centre Overview
-- Access & Utilization
-- Service Execution & Operations
-- Student Health History
+### Dashboard Pages:
+1. **Health Centre Overview**: Institutional KPIs, monthly volume trends, waiting time trajectories, population breakdown, and 12-hostel distribution.
+2. **Population & Demographics**: Comparative analysis of Students vs Faculty vs General Staff across wait times, satisfaction, and symptom profiles.
+3. **Access & Utilization**: Access barrier breakdowns, capacity utilization vs threshold (>100%), and wait time correlation scatter plots.
+4. **Service Execution & Operations**: Operational workload, target vs actual consultation metrics, and automated Action Required tables.
+5. **Patient Health History**: Fast individual synthetic profile lookup (`STUxxxx`, `FACxxxx`, `STFxxxx`) with chronological health event timelines.
 
 The student history page accepts synthetic IDs such as `STU0421` and demonstrates fast historical retrieval from structured records. It is clearly labelled as a synthetic academic dataset and not a real clinical record system.
 

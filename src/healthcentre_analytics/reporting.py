@@ -74,6 +74,13 @@ def generate_charts(data: dict[str, pd.DataFrame]) -> list[str]:
     dept.columns = ["department", "visits"]
     wait = visits.groupby("year_month")["wait_time_minutes"].mean().reset_index(name="avg_wait_time")
     capacity = data["capacity"].groupby("service_category")["capacity_utilization_pct"].mean().reset_index()
+    
+    pop_group = enriched["population_group"].value_counts().reset_index() if "population_group" in enriched.columns else pd.DataFrame()
+    if not pop_group.empty:
+        pop_group.columns = ["population_group", "visits"]
+        
+    hostel_data = enriched.loc[enriched["population_group"].eq("Student")]["hostel"].value_counts().reset_index() if "population_group" in enriched.columns else enriched["hostel"].value_counts().reset_index()
+    hostel_data.columns = ["hostel", "visits"]
 
     charts = [
         ("monthly_visit_trend.png", monthly, "year_month", "visits", "Monthly Visit Trend", "line"),
@@ -88,7 +95,11 @@ def generate_charts(data: dict[str, pd.DataFrame]) -> list[str]:
             "Average Capacity Utilization by Service",
             "bar",
         ),
+        ("hostel_utilization.png", hostel_data, "hostel", "visits", "Visits by NIT Calicut Hostel", "bar"),
     ]
+    if not pop_group.empty:
+        charts.append(("population_group_utilization.png", pop_group, "population_group", "visits", "Visits by Population Group", "bar"))
+
     saved = []
     for filename, frame, x, y, title, kind in charts:
         if kind == "line":

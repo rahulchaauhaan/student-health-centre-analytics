@@ -31,8 +31,15 @@ DEPARTMENTS = [
 ]
 
 PROGRAMS = ["B.Tech", "M.Tech", "MBA", "B.Sc", "M.Sc"]
-HOSTELS = ["Hostel A", "Hostel B", "Hostel C", "Hostel D", "Hostel E", "Day Scholar"]
-SEGMENTS = ["Hostel Resident", "Day Scholar", "First Year", "Final Year", "Sports Participant"]
+HOSTELS = [
+    "PG1", "PG2", "Hostel A", "Hostel B", "Hostel C", "Hostel D",
+    "Hostel E", "Hostel F", "Hostel G", "MBH 1", "MBH", "MLH",
+]
+SEGMENTS = ["Hostel Resident", "First Year", "Final Year", "Sports Participant"]
+
+POPULATION_GROUPS = ["Student", "Faculty", "General Staff"]
+FACULTY_COUNT = 250
+GENERAL_STAFF_COUNT = 200
 
 SERVICE_CATEGORIES = [
     "General Consultation",

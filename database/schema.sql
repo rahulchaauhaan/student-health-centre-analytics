@@ -11,7 +11,8 @@ CREATE TABLE students (
     program TEXT NOT NULL,
     year_of_study INTEGER NOT NULL,
     hostel TEXT NOT NULL,
-    student_segment TEXT NOT NULL
+    student_segment TEXT NOT NULL,
+    population_group TEXT NOT NULL DEFAULT 'Student'
 );
 
 CREATE TABLE staff (
